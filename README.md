@@ -17,4 +17,12 @@ Want to make lov.ai even better? Feel free to fork the repo, create an issue, or
 
 
 💡 **lov.ai – Because Everyone Deserves a Great Conversation!** 💖  
-```
+
+## Screenshots
+
+### Landing Page
+![Landing Page](./screenshot/1.png)
+
+### Chat Interface
+![Chat Interface](./screenshot/2.png)
+
