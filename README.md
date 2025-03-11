@@ -1,7 +1,7 @@
 
 # lov.ai - Your Virtual AI Companion 💙  
 
-🚀 **AI ChatMate** is an immersive chatbot experience where you can choose and chat with your very own AI-powered companion! Whether you're looking for casual conversation, emotional support, or just some fun banter, AI ChatMate brings your virtual friend to life.  
+🚀 **lov.ai** is an immersive chatbot experience where you can choose and chat with your very own AI-powered companion! Whether you're looking for casual conversation, emotional support, or just some fun banter, AI ChatMate brings your virtual friend to life.  
 
 
 
