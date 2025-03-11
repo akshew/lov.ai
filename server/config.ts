@@ -11,7 +11,7 @@ interface Config {
 }
 
 const serverConfig: Config = {
-  geminiApiKey: process.env.GEMINI_API_KEY || "AIzaSyBgMncGVrLtkw2ZLel7O7mgmQo7RES047Q",
+  geminiApiKey: process.env.GEMINI_API_KEY || " ",
   mongoDbUrl: process.env.MONGODB_URL,
   rateLimits: {
     requestsPerMinute: 30,  // Adjust based on Gemini API limits
