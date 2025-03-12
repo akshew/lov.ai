@@ -1,4 +1,4 @@
-import express, { type Request, Response, NextFunction } from "express";
+import express, { Request, Response, NextFunction } from "express";
 import session from "express-session";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
@@ -10,26 +10,30 @@ declare module "express-session" {
 }
 
 const app = express();
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-// Setup session middleware
+// ✅ Setup session middleware
 app.use(
   session({
     secret: "ai-companion-secret",
     resave: false,
     saveUninitialized: false,
     cookie: {
-      secure: process.env.NODE_ENV === "production",
+      secure: false, // Set to true if using HTTPS
+      httpOnly: true, // Prevents client-side access to cookies
+      sameSite: "lax", // Allows session persistence
       maxAge: 24 * 60 * 60 * 1000, // 24 hours
     },
   })
 );
 
+// ✅ Logging middleware
 app.use((req, res, next) => {
   const start = Date.now();
   const path = req.path;
-  let capturedJsonResponse: Record<string, any> | undefined = undefined;
+  let capturedJsonResponse: Record<string, any> | undefined;
 
   const originalResJson = res.json;
   res.json = function (bodyJson, ...args) {
@@ -44,11 +48,9 @@ app.use((req, res, next) => {
       if (capturedJsonResponse) {
         logLine += ` :: ${JSON.stringify(capturedJsonResponse)}`;
       }
-
       if (logLine.length > 80) {
         logLine = logLine.slice(0, 79) + "…";
       }
-
       log(logLine);
     }
   });
@@ -56,17 +58,19 @@ app.use((req, res, next) => {
   next();
 });
 
+// ✅ Register API Routes
 (async () => {
   const server = await registerRoutes(app);
 
+  // ✅ Global error handler
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
     const status = err.status || err.statusCode || 500;
     const message = err.message || "Internal Server Error";
-
     res.status(status).json({ message });
-    throw err;
+    console.error(err);
   });
 
+  // ✅ Serve frontend & setup Vite for development
   if (app.get("env") === "development") {
     await setupVite(app, server);
   } else {
@@ -74,11 +78,7 @@ app.use((req, res, next) => {
   }
 
   const port = 5000;
-  server.listen({
-    port,
-    host: "0.0.0.0",
-    reusePort: true,
-  }, () => {
-    log(`serving on port ${port}`);
+  server.listen(port, "0.0.0.0", () => {
+    log(`Server running on port ${port}`);
   });
 })();
